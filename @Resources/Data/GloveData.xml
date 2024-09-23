@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Glove>
+	<default>
+		<Name value="기본" Datatype="string"/>
+		<Attack value ="5" Datatype="int"/>
+		<Speed value ="5" Datatype ="float"/>
+	</default>
+
+	<enegy>
+		<Name value="에너지드링크" Datatype="string"/>
+		<Attack value ="5" Datatype="int"/>
+		<Speed value ="7" Datatype ="float"/>
+		<Skill type="Heal">
+			<skill1>
+				<CoolDown value="5" Datatype="float"/>
+				<HealAmount value="15" Datatype="int"/>
+			</skill1>
+		</Skill>
+	</enegy>
+</Glove>
