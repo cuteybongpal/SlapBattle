@@ -12,14 +12,21 @@ public class ObjectManager
     private List<UI_Base> _uiPool = new List<UI_Base>();
     private Transform _transform;
 
-    public T Spawn<T>(string key) where T : BaseController
+    public T Spawn<T>(string key) where T : MonoBehaviour
     {
         Type type = typeof(T);
         GameObject go = null;
 
         if (type == typeof(PlayerController))
         {
-            if (_uiPool.Count <= 0)
+            PlayerController player = go.GetComponent<T>() as PlayerController;
+            _player = player;
+            go.GetComponent<Iinit>().Init();
+            return player as T;
+        }
+        else if (type == typeof(MonsterController))
+        {
+            if (_monsterPool.Count <= 0)
                 go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
             else
             {
@@ -28,7 +35,7 @@ public class ObjectManager
                 {
                     if (_uiPool[i].GetType() == typeof(T))
                     {
-                        go = _uiPool[i].gameObject;
+                        go = _monsterPool[i].gameObject;
                         isTypeMatchFound = true;
                         break;
                     }
@@ -38,14 +45,8 @@ public class ObjectManager
                     go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
                 }
             }
-            PlayerController player = go.GetComponent<T>() as PlayerController;
-            _player = player;
-            return player as T;
-        }
-        else if (type == typeof(MonsterController))
-        {
-            go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
             T controller = go.GetComponent<T>();
+            go.GetComponent<Iinit>().Init();
             _monsters.Add(controller as MonsterController);
             return controller as T;
         }
@@ -70,6 +71,7 @@ public class ObjectManager
                     go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
                 }
             }
+            go.GetComponent<Iinit>().Init();
             T uiElement = go.GetComponent<T>();
             _uis.Add(uiElement as UI_Base);
             return uiElement as T;

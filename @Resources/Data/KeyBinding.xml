@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<KeyBinding>
+	<MoveLeft type ="enum" value="ArrowLeft"/>
+	<MoveRight type ="enum" value="ArrowRight"/>
+	<Jump type ="enum" value="Space"/>
+	<Punch type ="enum" value="Z"/>
+	<Skill1 type ="enum" value="A"/>
+	<Skill2 type ="enum" value="S"/>
+	<Skill3 type ="enum" value="D"/>
+</KeyBinding>

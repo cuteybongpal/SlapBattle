@@ -4,9 +4,15 @@ using UnityEngine;
 using System.Xml;
 using System;
 
-public class DataManager
+public class DataManager : Iinit
 {
     public List<GloveData> GloveDatas = new List<GloveData>();
+    public Dictionary<Define.KeyEvents, KeyCode> KeyBinds = new Dictionary<Define.KeyEvents, KeyCode>();
+
+    public void Init()
+    {
+
+    }
     public void ReadData(string data)
     {
         XmlDocument xml = new XmlDocument();
@@ -90,6 +96,7 @@ public class DataManager
         }
         if (type == "string")
         {
+            Define.KeyEvents value = (Define.KeyEvents)Enum.Parse(typeof(Define.KeyEvents), data);
             switch (NodeName)
             {
                 case "Name":
@@ -97,9 +104,14 @@ public class DataManager
                     break;
             }
         }
+        if (type == "enum")
+        {
+            Enum.Parse(typeof(Define.KeyEvents), NodeName);
+        }
 
-        
     }
+
+    
 }
 public class GloveData
 {
