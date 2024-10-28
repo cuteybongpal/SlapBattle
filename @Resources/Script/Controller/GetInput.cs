@@ -26,4 +26,9 @@ public class GetInput : MonoBehaviour
             await UniTask.Yield();
         }
     }
+    public void Add(KeyCode key, Action action)
+    {
+        keys.Add(key);
+        actions.Add(action);
+    }
 }

@@ -11,7 +11,7 @@ public class DataManager : Iinit
 
     public void Init()
     {
-
+        ReadData(Managers.Resource.Load<TextAsset>("KeyBinding.data").text);
     }
     public void ReadData(string data)
     {
@@ -96,7 +96,6 @@ public class DataManager : Iinit
         }
         if (type == "string")
         {
-            Define.KeyEvents value = (Define.KeyEvents)Enum.Parse(typeof(Define.KeyEvents), data);
             switch (NodeName)
             {
                 case "Name":
@@ -106,7 +105,9 @@ public class DataManager : Iinit
         }
         if (type == "enum")
         {
-            Enum.Parse(typeof(Define.KeyEvents), NodeName);
+            KeyCode value = (KeyCode)Enum.Parse(typeof(KeyCode), data);
+            Define.KeyEvents _key = (Define.KeyEvents)Enum.Parse(typeof(Define.KeyEvents), NodeName);
+            KeyBinds.Add(_key, value);
         }
 
     }
