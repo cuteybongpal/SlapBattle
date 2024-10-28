@@ -13,7 +13,7 @@ public class PlayerController : CreatureController, Iinit
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Punch], Attack);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Jump], Jump);
     }
-    public void init()
+    public void Init()
     {
 
     }
