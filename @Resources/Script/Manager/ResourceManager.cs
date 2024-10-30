@@ -63,11 +63,13 @@ public class ResourceManager
                     LoadAsync<T>(loadedAsset.Result[a].PrimaryKey, (bool isload) =>
                     {
                         LoadedArray[a] = isload;
-                        bool isLoadAll = false;
+                        bool isLoadAll = true;
                         for (int j = 0; j < LoadedArray.Length; j++)
                             isLoadAll &= LoadedArray[j];
                         if (isLoadAll)
+                        {
                             callback.Invoke();
+                        }
                     });
                 }
             }

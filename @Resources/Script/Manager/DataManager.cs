@@ -11,38 +11,34 @@ public class DataManager : Iinit
 
     public void Init()
     {
+        KeyBinds.Add(Define.KeyEvents.None, KeyCode.None);
         ReadData(Managers.Resource.Load<TextAsset>("KeyBinding.data").text);
+        ReadData(Managers.Resource.Load<TextAsset>("GloveData.data").text);
     }
     public void ReadData(string data)
     {
         XmlDocument xml = new XmlDocument();
         xml.LoadXml(data);
-
         XmlNode HeadNode = xml.DocumentElement;
         XmlNodeList _childs = HeadNode.ChildNodes;
-        DataType _datatype = (DataType)Enum.Parse(typeof(DataType), HeadNode.Name);
-        switch(_datatype)
-        {
-            case DataType.PlayerData:
-                break;
-            case DataType.MonsterData:
-                break;
-            case DataType.GloveData:
-                
-                break;
-        }    
-        ReadSonData(_childs, 0);
+        //for (int i =0; i < _childs.Count; i++)
+        //{
+        //    Debug.Log(_childs.Item(i).OuterXml);
+        //}
+        DataType datatype = (DataType)Enum.Parse(typeof(DataType), HeadNode.Name);
+        ReadSonData(_childs, 0, datatype);
     }
-    void ReadSonData(XmlNodeList childlist, int depth)
+    void ReadSonData(XmlNodeList childlist, int depth, DataType datatype)
     {
         int _depth = depth + 1;
-        if (_depth == 1)
+        if (_depth == 1 && datatype == DataType.GloveData)
             GloveDatas.Add(new GloveData());
         for (int i =0;  i < childlist.Count; i++)
         {
-            XmlNode child = childlist[i];
+            XmlNode child = childlist.Item(i);
+            
             XmlAttribute att_name = child.Attributes["value"];
-            XmlAttribute att_type = child.Attributes["Datatype"];
+            XmlAttribute att_type = child.Attributes["type"];
             string NodeName = child.Name;
             string value = "";
             string type = "";
@@ -52,10 +48,9 @@ public class DataManager : Iinit
                 type = att_type.Value;
                 SetDataToVariable(type, value, NodeName);
             }
-            
-            if (child.ChildNodes.Count != 0)
+            else if (child.ChildNodes.Count != 0)
             {
-
+                ReadSonData(child.ChildNodes, depth, datatype);
             }
         }
     }
@@ -64,12 +59,11 @@ public class DataManager : Iinit
         PlayerData,
         MonsterData,
         GloveData,
-
+        KeyBindingData
     }
 
     void SetDataToVariable(string type, string data, string NodeName)
     {
-        
         if (type == "int")
         {
             int value = int.Parse(data);

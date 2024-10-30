@@ -12,6 +12,7 @@ public class Define
         Punch,
         Skill1,
         Skill2,
-        Skill3
+        Skill3,
+        None
     }
 }
