@@ -18,6 +18,11 @@ public class ResourceManager
         }
         return null;
     }
+    public GameObject Instantiate(string key)
+    {
+        GameObject go = GameObject.Instantiate(Load<GameObject>(key));
+        return go;
+    }
 
     public void LoadAsync<T>(string key, Action<bool> callback = null) where T : UnityEngine.Object
     {
@@ -52,11 +57,12 @@ public class ResourceManager
             if (loadedAsset.Status == AsyncOperationStatus.Succeeded)
             {
                 bool[] LoadedArray = new bool[loadedAsset.Result.Count];
-                for (int i = 0; i < loadedAsset.Result.Count; i++)
+                for (int i = 0; i < LoadedArray.Length; i++)
                 {
-                    LoadAsync<T>(loadedAsset.Result[i].PrimaryKey, (bool isload) =>
+                    int a = i;
+                    LoadAsync<T>(loadedAsset.Result[a].PrimaryKey, (bool isload) =>
                     {
-                        LoadedArray[i] = isload;
+                        LoadedArray[a] = isload;
                         bool isLoadAll = false;
                         for (int j = 0; j < LoadedArray.Length; j++)
                             isLoadAll &= LoadedArray[j];

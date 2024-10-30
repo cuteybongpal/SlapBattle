@@ -19,6 +19,8 @@ public class ObjectManager
 
         if (type == typeof(PlayerController))
         {
+            go = Managers.Resource.Instantiate(key);
+            Debug.Log(go.name);
             PlayerController player = go.GetComponent<T>() as PlayerController;
             _player = player;
             go.GetComponent<Iinit>().Init();

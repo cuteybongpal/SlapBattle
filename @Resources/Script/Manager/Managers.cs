@@ -28,11 +28,17 @@ public class Managers : MonoBehaviour
     {
         if (instance == null)
         {
+            Debug.Log("dadf");
             instance = this;
             DontDestroyOnLoad(gameObject);
             Resource.LoadAllAsync<TextAsset>("PreLoadData", () =>
             {
-                Data.Init();
+                Resource.LoadAllAsync<GameObject>("PreLoadPrefab", () =>
+                {
+                    Debug.Log("dadf");
+                    Data.Init();
+                    Object.Spawn<PlayerController>("Player.prefab");
+                });
             });
         }
         else
