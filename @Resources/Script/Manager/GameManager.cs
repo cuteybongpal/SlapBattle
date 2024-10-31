@@ -10,6 +10,7 @@ public class GameManager
     bool isChangingScene = false;
     int _currentSceneIndex = 0;
     public int CurrentSceneIndex {  get { return _currentSceneIndex; } }
+    public Define.Gloves CurrentGlove = Define.Gloves.Default;
     public enum GameState
     {
         Play,
@@ -60,12 +61,17 @@ public class GameManager
             await WaitForSeconds(Time.deltaTime);
         Camera _main = Camera.main;
         await SceneManager.LoadSceneAsync((int)scene);
-        _main.gameObject.SetActive(false);
-        await SceneManager.UnloadSceneAsync(CurrentSceneIndex);
+        await SceneManager.UnloadSceneAsync(_currentSceneIndex);
         _currentSceneIndex = (int)scene;
+        if (_currentSceneIndex == (int)Scene.Game)
+            GameStart();
     }
     async UniTask WaitForSeconds(float t)
     {
         await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+    }
+    void GameStart()
+    {
+        Managers.Object.Spawn<LeagueStart>("League.prfab");
     }
 }

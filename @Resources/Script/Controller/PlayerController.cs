@@ -23,6 +23,7 @@ public class PlayerController : CreatureController, Iinit
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Punch], Attack, GetInput.ClickType.Down);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.None], Idle, GetInput.ClickType.Pressed);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Jump], Jump, GetInput.ClickType.Down);
+        _glove = GetComponent<GloveController>();
         _anim = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
         _rbody = GetComponent<Rigidbody2D>();
@@ -32,7 +33,7 @@ public class PlayerController : CreatureController, Iinit
         if (!_canMove)
             return;
         _renderer.flipX = true;
-        _rbody.velocity = new Vector2(-5, _rbody.velocity.y);
+        _rbody.velocity = new Vector2(-_glove.Speed, _rbody.velocity.y);
         State = CreatureState.Move;
     }
     void MoveRight()
@@ -40,7 +41,7 @@ public class PlayerController : CreatureController, Iinit
         if (!_canMove)
             return;
         _renderer.flipX = false;
-        _rbody.velocity = new Vector2(5, _rbody.velocity.y);
+        _rbody.velocity = new Vector2(_glove.Speed, _rbody.velocity.y);
         State = CreatureState.Move;
     }
     void Jump()
@@ -75,5 +76,9 @@ public class PlayerController : CreatureController, Iinit
         _rbody.velocity = new Vector2(0, _rbody.velocity.y);
         await UniTask.Delay(TimeSpan.FromSeconds(t));
         _canMove = true;
+    }
+    protected override void Die()
+    {
+        
     }
 }

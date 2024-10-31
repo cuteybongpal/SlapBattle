@@ -31,12 +31,11 @@ public class Managers : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            Resource.LoadAllAsync<TextAsset>("PreLoadData", () =>
+            Resource.LoadAllAsync<GameObject>("PreLoadPrefab", () =>
             {
-                Data.Init();
-                Resource.LoadAllAsync<GameObject>("PreLoadPrefab", () =>
+                Resource.LoadAllAsync<TextAsset>("PreLoadData", () =>
                 {
-                    Object.Spawn<PlayerController>("Player.prefab");
+                    Data.Init();
                 });
             });
         }

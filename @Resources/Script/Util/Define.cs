@@ -15,4 +15,9 @@ public class Define
         Skill3,
         None
     }
+    public enum Gloves
+    {
+        Default,
+        Energy
+    }
 }

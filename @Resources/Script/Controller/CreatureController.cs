@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CreatureController : BaseController
 {
+    public int MaxHp;
+    public int CurrentHp;
+
     public enum CreatureState
     {
         Idle,
@@ -45,6 +48,18 @@ public class CreatureController : BaseController
 
     }
     protected virtual void S_Attack()
+    {
+
+    }
+    public void Damaged(int damge)
+    {
+        if (CurrentHp <= 0)
+            return;
+        CurrentHp -= damge;
+        if (CurrentHp <= 0)
+            Die();
+    }
+    protected virtual void Die()
     {
 
     }
