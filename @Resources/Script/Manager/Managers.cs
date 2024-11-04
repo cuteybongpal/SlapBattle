@@ -19,11 +19,15 @@ public class Managers : MonoBehaviour
     ResourceManager _resources = new ResourceManager();
     DataManager _data = new DataManager();
     GameManager _game = new GameManager();
+    SoundManager _sound = new SoundManager();
+    EventManager _event = new EventManager();
 
     public static ObjectManager Object { get { return Instance._object; } }
     public static ResourceManager Resource { get { return Instance._resources; } }
     public static DataManager Data { get { return Instance._data; } }
     public static GameManager Game { get { return Instance._game; } }
+    public static SoundManager Sound { get { return Instance._sound; } }
+    public static EventManager Event { get { return Instance._event; } }
 
     private void Awake()
     {
@@ -31,11 +35,15 @@ public class Managers : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            Resource.LoadAllAsync<GameObject>("PreLoadPrefab", () =>
+            Resource.LoadAllAsync<AudioClip>("PreLoadSound", () =>
             {
-                Resource.LoadAllAsync<TextAsset>("PreLoadData", () =>
+                Resource.LoadAllAsync<GameObject>("PreLoadPrefab", () =>
                 {
-                    Data.Init();
+                    Resource.LoadAllAsync<TextAsset>("PreLoadData", () =>
+                    {
+                        Data.Init();
+                        Event.AssetAllLoaded?.Invoke();
+                    });
                 });
             });
         }

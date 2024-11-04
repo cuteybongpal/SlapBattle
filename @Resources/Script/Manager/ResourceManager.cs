@@ -20,8 +20,7 @@ public class ResourceManager
     }
     public GameObject Instantiate(string key)
     {
-        GameObject go = GameObject.Instantiate(Load<GameObject>(key));
-        return go;
+        return GameObject.Instantiate(Load<GameObject>(key));
     }
 
     public void LoadAsync<T>(string key, Action<bool> callback = null) where T : UnityEngine.Object
@@ -38,6 +37,7 @@ public class ResourceManager
             {
                 if (result.Status == AsyncOperationStatus.Succeeded)
                 {
+                    Debug.Log(key);
                     _resources.Add(key, (UnityEngine.Object)handle.Result);
                     callback.Invoke(true);
                 }

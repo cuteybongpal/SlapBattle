@@ -17,17 +17,17 @@ public class SoundManager : MonoBehaviour, Iinit
     {
         
     }
-
     //배경음이 이미 틀어져 있다면 교체함
-    public void TurOnBGM(AudioClip clip, bool isLoop)
+    public void TurnOnBGM(AudioClip clip, bool isLoop)
     {
         if (audios.Count == 0)
         {
-            AddAudioSource(true);
+            audios.Add(GetComponent<AudioSource>());
+            audios[0].loop = true;
         }
         audios[0].clip = clip;
         audios[0].Play();
-        if (isLoop)
+        if (!isLoop)
             WaitClipEndAndDelClip(clip, 0).Forget();
     }
     public void TurnOnEff(AudioClip _clip)
@@ -71,7 +71,7 @@ public class SoundManager : MonoBehaviour, Iinit
     }
     private AudioSource AddAudioSource(bool isLoop)
     {
-        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+        AudioSource audioSource = new GameObject() { name = "sound01" }.AddComponent<AudioSource>();
         audioSource.loop = isLoop;
         audioSource.playOnAwake = false;
         audios.Add(audioSource);

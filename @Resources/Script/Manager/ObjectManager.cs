@@ -12,7 +12,7 @@ public class ObjectManager
     private List<UI_Base> _uiPool = new List<UI_Base>();
     private Transform _transform;
 
-    public T Spawn<T>(string key) where T : MonoBehaviour
+    public T Spawn<T>(string key) where T : BaseController
     {
         Type type = typeof(T);
         GameObject go = null;
@@ -20,7 +20,6 @@ public class ObjectManager
         if (type == typeof(PlayerController))
         {
             go = Managers.Resource.Instantiate(key);
-            Debug.Log(go.name);
             PlayerController player = go.GetComponent<T>() as PlayerController;
             _player = player;
             go.GetComponent<Iinit>().Init();

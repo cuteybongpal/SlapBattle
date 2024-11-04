@@ -33,7 +33,7 @@ public class GameManager
             switch (_state)
             {
                 case GameState.Play:
-                    Time.timeScale = 0;
+                    Time.timeScale = 1;
                     Time.fixedDeltaTime = Time.deltaTime;
                     break;
                 case GameState.Slow:
@@ -59,12 +59,22 @@ public class GameManager
     {
         while (isChangingScene)
             await WaitForSeconds(Time.deltaTime);
-        Camera _main = Camera.main;
-        await SceneManager.LoadSceneAsync((int)scene);
-        await SceneManager.UnloadSceneAsync(_currentSceneIndex);
-        _currentSceneIndex = (int)scene;
-        if (_currentSceneIndex == (int)Scene.Game)
-            GameStart();
+        AsyncOperation op = SceneManager.LoadSceneAsync((int)scene, LoadSceneMode.Additive);
+        op.completed += (a) =>
+        {
+            Debug.Log("로딩 씬 번호 : "+(int)scene);
+            AsyncOperation _op = SceneManager.UnloadSceneAsync(_currentSceneIndex);
+            _op.completed += (a) =>
+            {
+                Debug.Log("언로딩 씬 번호 : " + _currentSceneIndex);
+                _currentSceneIndex = (int)scene;
+                GameStart();
+            };
+            while (_op.isDone)
+                Debug.Log(_op.progress + "%");
+        };
+        while (op.isDone)
+            Debug.Log(op.progress+"%");
     }
     async UniTask WaitForSeconds(float t)
     {
@@ -72,6 +82,9 @@ public class GameManager
     }
     void GameStart()
     {
-        Managers.Object.Spawn<LeagueStart>("League.prfab");
+        State = GameState.Play;
+        Debug.Log("게임 시작");
+        Managers.Resource.Instantiate("LeagueStart.prefab");
+        
     }
 }

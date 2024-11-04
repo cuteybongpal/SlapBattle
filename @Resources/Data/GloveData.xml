@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GloveData>
 	<Default>
-		<Name value="기본" Datatype="string"/>
-		<Attack value ="5" Datatype="int"/>
-		<Speed value ="5" Datatype ="float"/>
+		<Name value="기본" type="string"/>
+		<Attack value ="5" type="int"/>
+		<Speed value ="5" type ="float"/>
 	</Default>
 	<Enegy>
-		<Name value="에너지드링크" Datatype="string"/>
-		<Attack value ="5" Datatype="int"/>
-		<Speed value ="7" Datatype ="float"/>
+		<Name value="에너지드링크" type="string"/>
+		<Attack value ="5" type="int"/>
+		<Speed value ="7" type ="float"/>
 		<Skill type="Heal">
 			<skill1>
-				<CoolDown value="5" Datatype="float"/>
-				<HealAmount value="15" Datatype="int"/>
+				<CoolDown value="5" type="float"/>
+				<EffectAmount value="15" type="float"/>
 			</skill1>
 		</Skill>
 	</Enegy>

@@ -15,7 +15,6 @@ public abstract class GloveController : BaseController
     {
         
     }
-
     public abstract void Skill1();
     public abstract void Skill2();
     public abstract void Skill3();

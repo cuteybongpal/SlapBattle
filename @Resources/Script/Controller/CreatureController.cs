@@ -11,12 +11,13 @@ public class CreatureController : BaseController
     {
         Idle,
         Move,
+        Damaged,
         Attack
     }
     CreatureState _state = CreatureState.Idle;
-    protected CreatureState State 
+    protected CreatureState State
     {
-        get 
+        get
         {
             return _state;
         }
@@ -48,6 +49,10 @@ public class CreatureController : BaseController
 
     }
     protected virtual void S_Attack()
+    {
+
+    }
+    protected virtual void S_Damaged()
     {
 
     }

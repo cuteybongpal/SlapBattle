@@ -14,6 +14,7 @@ public class DataManager : Iinit
         KeyBinds.Add(Define.KeyEvents.None, KeyCode.None);
         ReadData(Managers.Resource.Load<TextAsset>("KeyBinding.data").text);
         ReadData(Managers.Resource.Load<TextAsset>("GloveData.data").text);
+        
     }
     public void ReadData(string data)
     {
@@ -31,10 +32,11 @@ public class DataManager : Iinit
     void ReadSonData(XmlNodeList childlist, int depth, DataType datatype)
     {
         int _depth = depth + 1;
-        if (_depth == 1 && datatype == DataType.GloveData)
-            GloveDatas.Add(new GloveData());
         for (int i =0;  i < childlist.Count; i++)
         {
+
+            if (_depth == 1 && datatype == DataType.GloveData)
+                GloveDatas.Add(new GloveData());
             XmlNode child = childlist.Item(i);
             
             XmlAttribute att_name = child.Attributes["value"];
@@ -50,7 +52,7 @@ public class DataManager : Iinit
             }
             else if (child.ChildNodes.Count != 0)
             {
-                ReadSonData(child.ChildNodes, depth, datatype);
+                ReadSonData(child.ChildNodes, _depth, datatype);
             }
         }
     }
@@ -73,9 +75,6 @@ public class DataManager : Iinit
                 case "Attack":
                     GloveDatas[GloveDatas.Count - 1].Attk = value;
                     break;
-                case "Speed":
-                    GloveDatas[GloveDatas.Count - 1].Speed = value;
-                    break;
             }
         }
         if (type == "float")
@@ -85,6 +84,12 @@ public class DataManager : Iinit
             {
                 case "CoolDown":
                     GloveDatas[GloveDatas.Count - 1].SkillCoolDown.Add(value);
+                    break;
+                case "EffectAmount":
+                    GloveDatas[GloveDatas.Count - 1].EffectAmoutn.Add(value);
+                    break;
+                case "Speed":
+                    GloveDatas[GloveDatas.Count - 1].Speed = value;
                     break;
             }
         }
@@ -115,4 +120,5 @@ public class GloveData
     public float Speed;
 
     public List<float> SkillCoolDown = new List<float>();
+    public List<float> EffectAmoutn = new List<float>();
 }

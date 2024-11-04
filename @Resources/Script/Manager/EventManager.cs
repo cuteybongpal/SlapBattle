@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class EventManager
 {
-    public event Action<int> PlayerOnHit;
-    public event Action PlayerDie;
+    public Action<int> PlayerOnHit;
+    public Action PlayerDie;
 
-    public event Action<int> MonsterOnHit;
+    public Action AssetAllLoaded;
 }

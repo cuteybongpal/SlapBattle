@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class EnergeGlove : GloveController
 {
-    
-
     void Start()
     {
-        name = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Name;
+        GloveName = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Name;
         Speed = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Speed;
         Attack = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Attk;
 
         SkillCoolDown = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].SkillCoolDown;
+        Debug.Log(GloveName);
     }
     public override void Skill1()
     {
