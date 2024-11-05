@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : CreatureController, Iinit
+public class PlayerController : CreatureController, Iinit, ISubject
 {
     bool _canMove;
     bool _canAttack = true;
+    bool _canJump = true;
     GetInput _input;
     Animator _anim;
     SpriteRenderer _renderer;
@@ -17,13 +18,17 @@ public class PlayerController : CreatureController, Iinit
     public GloveController _glove;
     float _punchCoolDown = .5f;
     Damage Punch;
+    AudioClip _walking;
+    AudioSource _audio;
+    List<IObserver> _objservers = new List<IObserver>();
 
     public new void Init()
     {
         _canMove = true;
+        _canJump = true;
         _input = GetComponent<GetInput>();
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.MoveLeft], MoveLeft, GetInput.ClickType.Pressed);
-
+        _walking = Managers.Resource.Load<AudioClip>("Walking.mp3");
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.MoveRight], MoveRight, GetInput.ClickType.Pressed);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Punch], Attack, GetInput.ClickType.Down);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.None], Idle, GetInput.ClickType.Pressed);
@@ -41,11 +46,32 @@ public class PlayerController : CreatureController, Iinit
         _anim = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
         _rbody = GetComponent<Rigidbody2D>();
+        _audio = GetComponent<AudioSource>();
+        _audio.volume = Managers.Game.Volume;
         Punch = transform.GetChild(0).GetComponent<Damage>();
         Punch.ownerTag = gameObject.tag;
         Punch.damage = _glove.Attack;
         Punch.gameObject.SetActive(false);
+        CheckCanJump();
     }
+    #region Ojserver Pattern
+    public void Add(IObserver _observer)
+    {
+        _objservers.Add(_observer);
+    }
+    public void Remove(IObserver _observer)
+    {
+        _objservers.Remove(_observer);
+    }
+    public void Notify()
+    {
+        foreach(IObserver _ob in  _objservers)
+        {
+            _ob.OnNotified();
+        }
+    }
+    #endregion
+    #region input Method
     void MoveLeft()
     {
         if (!_canMove || State == CreatureState.Damaged)
@@ -66,7 +92,8 @@ public class PlayerController : CreatureController, Iinit
     }
     void Jump()
     {
-        _rbody.velocity = new Vector2(_rbody.velocity.x, 5);
+        if (_canJump)
+            _rbody.velocity = new Vector2(_rbody.velocity.x, 5);
     }
     async void Attack()
     {
@@ -86,6 +113,8 @@ public class PlayerController : CreatureController, Iinit
         _rbody.velocity = new Vector2(0, _rbody.velocity.y);
         State = CreatureState.Idle;
     }
+    #endregion
+    #region State Method
     protected override void S_Attack()
     {
         _anim.Play("PlayerAttack");
@@ -98,9 +127,27 @@ public class PlayerController : CreatureController, Iinit
     {
         _anim.Play("PlayerIdle");
     }
+    #endregion
     protected override void Die()
     {
 
+    }
+    async void CheckCanJump()
+    {
+        while (true)
+        {
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, 1.2f);
+            foreach (var hit in hits)
+            {
+                if (hit.collider.gameObject.CompareTag("BackGround"))
+                {
+                    _canJump = true;
+                    break;
+                }
+                _canJump = false;
+            }
+            await WaitForSeconds(Time.deltaTime);
+        }
     }
     async UniTaskVoid DisableMove(float t)
     {
@@ -115,5 +162,21 @@ public class PlayerController : CreatureController, Iinit
         await UniTask.Delay(TimeSpan.FromSeconds(_punchCoolDown));
         _canAttack = true;
     }
-    
+    void WalkSound()
+    {
+        _audio.PlayOneShot(_walking);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Attack"))
+        {
+            Damage damage = collision.GetComponent<Damage>();
+            if (damage.ownerTag.Equals(gameObject.tag))
+                return;
+            else
+            {
+
+            }
+        }
+    }
 }

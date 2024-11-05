@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IObserver
 {
-    public void OnNotified<T>(T arguement);
+    public void OnNotified();
 }

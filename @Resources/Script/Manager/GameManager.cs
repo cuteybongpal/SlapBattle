@@ -8,8 +8,9 @@ using UnityEngine.SceneManagement;
 public class GameManager
 {
     bool isChangingScene = false;
-    int _currentSceneIndex = 0;
+    int _currentSceneIndex;
     public int CurrentSceneIndex {  get { return _currentSceneIndex; } }
+    public float Volume = 1f;
     public Define.Gloves CurrentGlove = Define.Gloves.Default;
     public enum GameState
     {
