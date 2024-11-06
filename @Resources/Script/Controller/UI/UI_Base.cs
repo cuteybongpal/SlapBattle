@@ -4,9 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Base : BaseController
+public class UI_Base : BaseController, Iinit
 {
     Dictionary<string, UnityEngine.Object> children = new Dictionary<string, UnityEngine.Object>();
+
+    public virtual void Init()
+    {
+        
+    }
+
     protected T FindChild<T>(string name) where T : MonoBehaviour
     {
         if (children.ContainsKey(name))

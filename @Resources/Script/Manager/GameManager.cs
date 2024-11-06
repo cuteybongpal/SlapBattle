@@ -7,11 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager
 {
-    bool isChangingScene = false;
-    int _currentSceneIndex;
-    public int CurrentSceneIndex {  get { return _currentSceneIndex; } }
-    public float Volume = 1f;
-    public Define.Gloves CurrentGlove = Define.Gloves.Default;
     public enum GameState
     {
         Play,
@@ -23,8 +18,15 @@ public class GameManager
         Lobby,
         Game,
     }
+
+    bool isChangingScene = false;
+    int _currentSceneIndex;
+    int _currentPunchAmount;
+    public float Volume = 1f;
+    public Define.Gloves CurrentGlove = Define.Gloves.Default;
     GameState _state = GameState.Play;
     Scene _scene = Scene.Lobby;
+
     public GameState State 
     {
         get { return _state; }
@@ -56,6 +58,17 @@ public class GameManager
             ChangeScene(_scene);
         }
     }
+    public int CurrentSceneIndex { get { return _currentSceneIndex; } }
+    public int CurrentPunchAmount 
+    {
+        get {  return _currentPunchAmount; }
+        set
+        {
+            _currentPunchAmount = value;
+            Managers.Event.PunchInCrease?.Invoke(_currentPunchAmount);
+        }
+    }
+
     async void ChangeScene(Scene scene)
     {
         while (isChangingScene)
@@ -83,7 +96,11 @@ public class GameManager
     }
     void GameStart()
     {
+        //초기화
         State = GameState.Play;
+        Managers.Event.PlayerOnHit = null;
+        Managers.Event.GameOver = null;
+        Managers.Event.PunchInCrease = null;
         Debug.Log("게임 시작");
         Managers.Resource.Instantiate("LeagueStart.prefab");
         

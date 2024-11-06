@@ -11,10 +11,6 @@ public abstract class GloveController : BaseController
     public List<float> SkillCoolDown = new List<float>();
 
     protected bool[] CanUseSkill = new bool[3];
-    protected override void Init()
-    {
-        
-    }
     public abstract void Skill1();
     public abstract void Skill2();
     public abstract void Skill3();

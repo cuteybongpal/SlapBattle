@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -8669919086587637083}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHp: 0
-  CurrentHp: 0
   _glove: {fileID: 0}
 --- !u!114 &5766811042342681538
 MonoBehaviour:
@@ -352,8 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118d1abfb8d441f4db17ae3c28876b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownerTag: 
-  damage: 0
 --- !u!61 &7195227911063179108
 BoxCollider2D:
   m_ObjectHideFlags: 0

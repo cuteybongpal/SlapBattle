@@ -5,7 +5,7 @@ using UnityEngine;
 public class CreatureController : BaseController
 {
     public int MaxHp;
-    public int CurrentHp;
+    int _currentHp;
 
     public enum CreatureState
     {
@@ -40,6 +40,8 @@ public class CreatureController : BaseController
             }
         }
     }
+    public int CurrentHp { get { return _currentHp; }  protected set { _currentHp = value; } }
+
     protected virtual void S_Idle()
     {
 
@@ -56,11 +58,11 @@ public class CreatureController : BaseController
     {
 
     }
-    public void Damaged(int damge)
+    public virtual void Damaged(int damge)
     {
         if (CurrentHp <= 0)
             return;
-        CurrentHp -= damge;
+        _currentHp -= damge;
         if (CurrentHp <= 0)
             Die();
     }

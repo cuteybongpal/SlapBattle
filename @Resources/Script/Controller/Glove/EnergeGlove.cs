@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnergeGlove : GloveController
+public class EnergeGlove : GloveController, Iinit
 {
-    void Start()
+    public void Init()
     {
         GloveName = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Name;
         Speed = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].Speed;
@@ -12,6 +12,7 @@ public class EnergeGlove : GloveController
 
         SkillCoolDown = Managers.Data.GloveDatas[(int)Define.Gloves.Energy].SkillCoolDown;
         Debug.Log(GloveName);
+        Debug.Log(Attack);
     }
     public override void Skill1()
     {

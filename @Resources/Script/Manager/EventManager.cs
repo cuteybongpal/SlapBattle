@@ -6,7 +6,9 @@ using UnityEngine;
 public class EventManager
 {
     public Action<int> PlayerOnHit;
-    public Action PlayerDie;
+    public Action GameOver;
+    public Action<int> PunchInCrease;
 
     public Action AssetAllLoaded;
+
 }

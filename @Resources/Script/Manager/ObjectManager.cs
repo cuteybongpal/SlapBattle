@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ObjectManager
@@ -22,13 +23,17 @@ public class ObjectManager
             go = Managers.Resource.Instantiate(key);
             PlayerController player = go.GetComponent<T>() as PlayerController;
             _player = player;
-            go.GetComponent<Iinit>().Init();
+            Iinit _init = go.GetComponent<T>() as Iinit;
+            _init.Init();
             return player as T;
         }
         else if (type == typeof(MonsterController))
         {
-            if (_monsterPool.Count <= 0)
-                go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
+            if (_monsterPool.Count > 0)
+                if (_monsterPool[0].IsUnityNull())
+                    _monsterPool.Clear();
+            if (_monsterPool.Count == 0)
+                go = Managers.Resource.Instantiate(key);
             else
             {
                 bool isTypeMatchFound = false;
@@ -43,18 +48,22 @@ public class ObjectManager
                 }
                 if (!isTypeMatchFound)
                 {
-                    go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
+                    go = Managers.Resource.Instantiate(key);
                 }
             }
             T controller = go.GetComponent<T>();
-            go.GetComponent<Iinit>().Init();
+            Iinit _init = go.GetComponent<T>() as Iinit;
+            _init.Init();
             _monsters.Add(controller as MonsterController);
             return controller as T;
         }
-        else if (type == typeof(UI_Base))
+        else if (type.BaseType == typeof(UI_Base))
         {
-            if (_uiPool.Count <= 0)
-                go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
+            if (_uiPool.Count > 0)
+                if (_uiPool[0].IsUnityNull())
+                    _uiPool.Clear();
+            if (_uiPool.Count == 0)
+                go = Managers.Resource.Instantiate(key);
             else
             {
                 bool isTypeMatchFound = false;
@@ -69,7 +78,7 @@ public class ObjectManager
                 }
                 if (!isTypeMatchFound)
                 {
-                    go = GameObject.Instantiate(Managers.Resource.Load<GameObject>(key));
+                    go = Managers.Resource.Instantiate(key);
                 }
             }
             go.GetComponent<Iinit>().Init();

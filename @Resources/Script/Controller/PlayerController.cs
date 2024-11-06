@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : CreatureController, Iinit, ISubject
+public class PlayerController : CreatureController, Iinit
 {
     bool _canMove;
     bool _canAttack = true;
@@ -20,9 +20,8 @@ public class PlayerController : CreatureController, Iinit, ISubject
     Damage Punch;
     AudioClip _walking;
     AudioSource _audio;
-    List<IObserver> _objservers = new List<IObserver>();
 
-    public new void Init()
+    public void Init()
     {
         _canMove = true;
         _canJump = true;
@@ -33,6 +32,7 @@ public class PlayerController : CreatureController, Iinit, ISubject
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Punch], Attack, GetInput.ClickType.Down);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.None], Idle, GetInput.ClickType.Pressed);
         _input.Add(Managers.Data.KeyBinds[Define.KeyEvents.Jump], Jump, GetInput.ClickType.Down);
+        CurrentHp = MaxHp;
         switch (Managers.Game.CurrentGlove)
         {
             case Define.Gloves.Default:
@@ -43,34 +43,18 @@ public class PlayerController : CreatureController, Iinit, ISubject
                 break;
         }
         _glove = GetComponent<GloveController>();
+        Iinit _init = _glove as Iinit;
+        _init.Init();
         _anim = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
         _rbody = GetComponent<Rigidbody2D>();
         _audio = GetComponent<AudioSource>();
         _audio.volume = Managers.Game.Volume;
         Punch = transform.GetChild(0).GetComponent<Damage>();
-        Punch.ownerTag = gameObject.tag;
-        Punch.damage = _glove.Attack;
+        Punch.Init(this, _glove.Attack);
         Punch.gameObject.SetActive(false);
         CheckCanJump();
     }
-    #region Ojserver Pattern
-    public void Add(IObserver _observer)
-    {
-        _objservers.Add(_observer);
-    }
-    public void Remove(IObserver _observer)
-    {
-        _objservers.Remove(_observer);
-    }
-    public void Notify()
-    {
-        foreach(IObserver _ob in  _objservers)
-        {
-            _ob.OnNotified();
-        }
-    }
-    #endregion
     #region input Method
     void MoveLeft()
     {
@@ -128,6 +112,15 @@ public class PlayerController : CreatureController, Iinit, ISubject
         _anim.Play("PlayerIdle");
     }
     #endregion
+    public override void Damaged(int damge)
+    {
+        if (CurrentHp <= 0)
+            return;
+        CurrentHp -= damge;
+        Managers.Event.PlayerOnHit(CurrentHp);
+        if (CurrentHp <= 0)
+            Die();
+    }
     protected override void Die()
     {
 
@@ -149,6 +142,7 @@ public class PlayerController : CreatureController, Iinit, ISubject
             await WaitForSeconds(Time.deltaTime);
         }
     }
+
     async UniTaskVoid DisableMove(float t)
     {
         _canMove = false;
@@ -156,27 +150,16 @@ public class PlayerController : CreatureController, Iinit, ISubject
         await UniTask.Delay(TimeSpan.FromSeconds(t));
         _canMove = true;
     }
+
     async UniTaskVoid DisableAttack()
     {
         _canAttack = false;
         await UniTask.Delay(TimeSpan.FromSeconds(_punchCoolDown));
         _canAttack = true;
     }
+
     void WalkSound()
     {
         _audio.PlayOneShot(_walking);
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Attack"))
-        {
-            Damage damage = collision.GetComponent<Damage>();
-            if (damage.ownerTag.Equals(gameObject.tag))
-                return;
-            else
-            {
-
-            }
-        }
     }
 }
